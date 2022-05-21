@@ -1,4 +1,9 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using ChatApi.Data;
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<ChatApiContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ChatApiContext") ?? throw new InvalidOperationException("Connection string 'ChatApiContext' not found.")));
 
 // Add services to the container.
 
