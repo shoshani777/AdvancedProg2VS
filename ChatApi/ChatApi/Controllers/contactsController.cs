@@ -24,13 +24,13 @@ namespace ChatApi.Controllers
         }
 
 
-        //// GET: Users
-        //[HttpGet]
-        //public async Task<ICollection<User>> IndexAsync()
-        //{
-        //    return _context.User != null ?
-        //                 await _context.User.ToListAsync() : new List<User> { };
-        //}
+        // GET: Users
+        [HttpGet]
+        public async Task<ICollection<User>> IndexAsync()
+        {
+            return _context.User != null ?
+                         await _context.User.ToListAsync() : new List<User> { };
+        }
 
         // POST: Users/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
