@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\AdvancedProgramming2Vs\\AdvancedProg2Api\\AdvancedProg2VS\\ChatApi\\ChatApi\\ChatApi.csproj": {}
+    "C:\\Users\\gilad\\advanced\\advanced2\\ex2\\AdvancedProg2VS\\ChatApi\\ChatApi\\ChatApi.csproj": {}
   },
   "projects": {
-    "C:\\AdvancedProgramming2Vs\\AdvancedProg2Api\\AdvancedProg2VS\\ChatApi\\ChatApi\\ChatApi.csproj": {
+    "C:\\Users\\gilad\\advanced\\advanced2\\ex2\\AdvancedProg2VS\\ChatApi\\ChatApi\\ChatApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\AdvancedProgramming2Vs\\AdvancedProg2Api\\AdvancedProg2VS\\ChatApi\\ChatApi\\ChatApi.csproj",
+        "projectUniqueName": "C:\\Users\\gilad\\advanced\\advanced2\\ex2\\AdvancedProg2VS\\ChatApi\\ChatApi\\ChatApi.csproj",
         "projectName": "ChatApi",
-        "projectPath": "C:\\AdvancedProgramming2Vs\\AdvancedProg2Api\\AdvancedProg2VS\\ChatApi\\ChatApi\\ChatApi.csproj",
-        "packagesPath": "C:\\Users\\USER\\.nuget\\packages\\",
-        "outputPath": "C:\\AdvancedProgramming2Vs\\AdvancedProg2Api\\AdvancedProg2VS\\ChatApi\\ChatApi\\obj\\",
+        "projectPath": "C:\\Users\\gilad\\advanced\\advanced2\\ex2\\AdvancedProg2VS\\ChatApi\\ChatApi\\ChatApi.csproj",
+        "packagesPath": "C:\\Users\\gilad\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\gilad\\advanced\\advanced2\\ex2\\AdvancedProg2VS\\ChatApi\\ChatApi\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\USER\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\gilad\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -40,6 +40,10 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[6.0.5, )"
+            },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
               "version": "[6.0.5, )"
@@ -77,7 +81,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.203\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.202\\RuntimeIdentifierGraph.json"
         }
       }
     }

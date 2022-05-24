@@ -4,6 +4,7 @@ using ChatApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ChatApi.Migrations
 {
     [DbContext(typeof(ChatApiContext))]
-    partial class ChatApiContextModelSnapshot : ModelSnapshot
+    [Migration("20220524155726_init17")]
+    partial class init17
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,7 +40,7 @@ namespace ChatApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Chat", (string)null);
+                    b.ToTable("Chat");
                 });
 
             modelBuilder.Entity("ChatApi.Message", b =>
@@ -52,7 +54,10 @@ namespace ChatApi.Migrations
                     b.Property<string>("Author")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ChatId")
+                    b.Property<int>("Chat")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ChatId")
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
@@ -65,7 +70,7 @@ namespace ChatApi.Migrations
 
                     b.HasIndex("ChatId");
 
-                    b.ToTable("Message", (string)null);
+                    b.ToTable("Message");
                 });
 
             modelBuilder.Entity("ChatApi.User", b =>
@@ -81,16 +86,13 @@ namespace ChatApi.Migrations
 
                     b.HasKey("UserName");
 
-                    b.ToTable("User", (string)null);
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("ChatApi.UserContact", b =>
                 {
                     b.Property<string>("UserName")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ContactOf")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NickName")
                         .HasColumnType("nvarchar(max)");
@@ -100,16 +102,14 @@ namespace ChatApi.Migrations
 
                     b.HasKey("UserName");
 
-                    b.ToTable("UserContact", (string)null);
+                    b.ToTable("UserContact");
                 });
 
             modelBuilder.Entity("ChatApi.Message", b =>
                 {
                     b.HasOne("ChatApi.Chat", null)
                         .WithMany("Messages")
-                        .HasForeignKey("ChatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ChatId");
                 });
 
             modelBuilder.Entity("ChatApi.Chat", b =>

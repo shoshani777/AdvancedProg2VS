@@ -524,3 +524,4 @@ C:\AdvancedProgramming2Vs\AdvancedProg2Api\AdvancedProg2VS\ChatApi\ChatApi\obj\D
 C:\AdvancedProgramming2Vs\AdvancedProg2Api\AdvancedProg2VS\ChatApi\ChatApi\obj\Debug\net6.0\ChatApi.pdb
 C:\AdvancedProgramming2Vs\AdvancedProg2Api\AdvancedProg2VS\ChatApi\ChatApi\obj\Debug\net6.0\ChatApi.genruntimeconfig.cache
 C:\AdvancedProgramming2Vs\AdvancedProg2Api\AdvancedProg2VS\ChatApi\ChatApi\obj\Debug\net6.0\ref\ChatApi.dll
+C:\Users\gilad\advanced\advanced2\ex2\AdvancedProg2VS\ChatApi\ChatApi\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
