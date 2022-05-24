@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ChatApi;
 using ChatApi.Data;
+using Newtonsoft.Json;
 
 namespace ChatApi.Controllers
 {
@@ -26,10 +27,33 @@ namespace ChatApi.Controllers
 
         // GET: Users
         [HttpGet]
-        public async Task<ICollection<User>> IndexAsync()
+        public async Task<IActionResult> IndexAsync()
         {
-            return _context.User != null ?
-                         await _context.User.ToListAsync() : new List<User> { };
+            const string currUserName = "user1";
+            if(_context.Chat==null)
+                return Problem("Entity set 'ChatAPI.Chat'  is null.");
+            List<string> toReturn = new List<string>();
+            foreach (var chat in await _context.Chat.Where(chat=> chat.Name1.Equals(currUserName)||
+                                                            chat.Name2.Equals(currUserName)).ToListAsync())
+            {
+                string other = chat.Name1.Equals(currUserName) ? chat.Name2 : chat.Name1;
+                var otherUser = _context.UserContact.FirstOrDefaultAsync(user=>user.UserName.Equals(other)).Result;
+                string current = JsonConvert.SerializeObject(new { id = otherUser.UserName,
+                                                                    server = otherUser.Server
+                                                                });//name = ...,last = ..., lastdate = ...
+                toReturn.Add(current);
+            }
+            string final = "[";
+            foreach (var item in toReturn)
+            {
+                final += item;
+                if (!toReturn.Last().Equals(item))
+                    final += ",";
+            }
+            final += "]";
+            return Ok(final);
+            //return _context.User != null ?
+            //             await _context.User.ToListAsync() : new List<User> { };
         }
 
         // POST: Users/Create
