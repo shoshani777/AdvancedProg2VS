@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ChatApi.Migrations
 {
     [DbContext(typeof(ChatApiContext))]
-    [Migration("20220523224553_UserC3")]
-    partial class UserC3
+    [Migration("20220524171622_init30")]
+    partial class init30
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -93,6 +93,9 @@ namespace ChatApi.Migrations
                 {
                     b.Property<string>("UserName")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("NickName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Server")
                         .HasColumnType("nvarchar(max)");

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ChatApi.Migrations
 {
     [DbContext(typeof(ChatApiContext))]
-    [Migration("20220521140834_Init3")]
-    partial class Init3
+    [Migration("20220524220244_ContactOf")]
+    partial class ContactOf
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -32,6 +32,12 @@ namespace ChatApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("Name1")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name2")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Chat");
@@ -45,10 +51,10 @@ namespace ChatApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("AuthorUserName")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("Author")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ChatId")
+                    b.Property<int>("ChatId")
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
@@ -58,8 +64,6 @@ namespace ChatApi.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AuthorUserName");
 
                     b.HasIndex("ChatId");
 
@@ -71,13 +75,26 @@ namespace ChatApi.Migrations
                     b.Property<string>("UserName")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("ChatId")
-                        .HasColumnType("int");
-
                     b.Property<string>("NickName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserName");
+
+                    b.ToTable("User");
+                });
+
+            modelBuilder.Entity("ChatApi.UserContact", b =>
+                {
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ContactOf")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NickName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Server")
@@ -85,38 +102,21 @@ namespace ChatApi.Migrations
 
                     b.HasKey("UserName");
 
-                    b.HasIndex("ChatId");
-
-                    b.ToTable("User");
+                    b.ToTable("UserContact");
                 });
 
             modelBuilder.Entity("ChatApi.Message", b =>
                 {
-                    b.HasOne("ChatApi.User", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorUserName");
-
-                    b.HasOne("ChatApi.Chat", "Chat")
-                        .WithMany("Messages")
-                        .HasForeignKey("ChatId");
-
-                    b.Navigation("Author");
-
-                    b.Navigation("Chat");
-                });
-
-            modelBuilder.Entity("ChatApi.User", b =>
-                {
                     b.HasOne("ChatApi.Chat", null)
-                        .WithMany("Users")
-                        .HasForeignKey("ChatId");
+                        .WithMany("Messages")
+                        .HasForeignKey("ChatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ChatApi.Chat", b =>
                 {
                     b.Navigation("Messages");
-
-                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

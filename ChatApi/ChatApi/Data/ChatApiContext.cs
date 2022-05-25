@@ -19,5 +19,7 @@ namespace ChatApi.Data
         public DbSet<ChatApi.Chat>? Chat { get; set; }
 
         public DbSet<ChatApi.UserContact>? UserContact { get; set; }
+
+        public DbSet<ChatApi.Message>? Message { get; set; }
     }
 }
