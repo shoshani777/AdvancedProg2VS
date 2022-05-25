@@ -119,7 +119,7 @@ namespace ChatApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Edit(string? id, [Bind("NickName,Server")] UserContact contact)
+        public async Task<IActionResult> EditAsync(string? id, [Bind("NickName,Server")] UserContact contact)
         {
             string myId = "string";
             if (id == null || _context.UserContact == null)
@@ -138,12 +138,12 @@ namespace ChatApi.Controllers
             }
             chosenContact.NickName = contact.NickName;
             chosenContact.Server = contact.Server;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return Ok();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(string? id)
+        public async Task<IActionResult> DeleteAsync(string? id)
         {
             string myId = "string";
             if (id == null || _context.UserContact == null || _context.Chat == null)
@@ -173,7 +173,7 @@ namespace ChatApi.Controllers
             }
             _context.Chat.Remove(chosenChat);
             _context.UserContact.Remove(chosenContact);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return Ok();
         }
 
@@ -183,12 +183,7 @@ namespace ChatApi.Controllers
             {
                 return null;
             }
-            var chosenMesages = _context.Message.Where(d => d.Id == id2);
-            if (chosenMesages == null || !chosenMesages.Any())
-            {
-                return null;
-            }
-            var chosenMessage = chosenMesages.FirstOrDefault();
+            Message? chosenMessage = _context.Message.Find(id2);
             if (chosenMessage == null)
             {
                 return null;
@@ -219,7 +214,7 @@ namespace ChatApi.Controllers
         }
 
         [HttpPut("{id}/[action]/{id2}")]
-        public IActionResult messages(string? id, int id2, [Bind("content")] Message message)
+        public async Task<IActionResult> messages(string? id, int id2, [Bind("content")] Message message)
         {
             string myId = "string";
             Message? messageToEdit = GetMessage(id, id2, myId);
@@ -228,12 +223,12 @@ namespace ChatApi.Controllers
                 return NotFound();
             }
             messageToEdit.Content = message.Content;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return Ok();
         }
 
-        [HttpDelete("{id}/[action]/{id2}")]
-        public IActionResult messagesDelete(string? id, int id2)
+        [HttpDelete("{id}/messages/{id2}")]
+        public async Task<IActionResult> messagesDelete(string? id, int id2)
         {
             string myId = "string";
             Message? messageToDelete = GetMessage(id, id2, myId);
@@ -242,14 +237,34 @@ namespace ChatApi.Controllers
                 return NotFound();
             }
             _context.Remove(messageToDelete);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return Ok();
         }
 
         [HttpPost("[action]")]
-        public IActionResult invitations([Bind("from,to,server")] Invitation invitation)
+        public async Task<IActionResult> invitations([Bind("from,to,server")] Invitation invitation)
         {
-            return Ok(invitation);
+            if (_context.UserContact == null || _context.Chat == null || _context.User == null)
+            {
+                return BadRequest();
+            }
+            if (_context.User.Find(invitation.To) == null)
+            {
+                return NotFound();
+            }
+            UserContact contact = new();
+            contact.UserName = invitation.From;
+            contact.Server = invitation.Server;
+            contact.NickName = invitation.From;
+            contact.ContactOf = invitation.To;
+            _context.UserContact.Add(contact);
+
+            Chat chat = new();
+            chat.Name1 = invitation.To;
+            chat.Name2 = invitation.From;
+            _context.Chat.Add(chat);
+            await _context.SaveChangesAsync();
+            return Ok();
         }
     }
 }
