@@ -30,18 +30,18 @@ namespace ChatApi.Controllers
         [HttpGet]
         public async Task<IActionResult> IndexAsync()
         {
-            const string currUserName = "user1";
-            if(_context.Chat==null)
+            const string currUserName = "string";
+            if (_context.Chat == null)
                 return Problem("Entity set 'ChatAPI.Chat'  is null.");
             List<string> toReturn = new List<string>();
-            foreach (var chat in await _context.Chat.Where(chat=> chat.Name1.Equals(currUserName)||
+            foreach (var chat in await _context.Chat.Where(chat => chat.Name1.Equals(currUserName) ||
                                                             chat.Name2.Equals(currUserName)).ToListAsync())
             {
                 string other = chat.Name1.Equals(currUserName) ? chat.Name2 : chat.Name1;
-                var otherUser = _context.UserContact.FirstOrDefaultAsync(user=>user.UserName.Equals(other)).Result;
+                var otherUser = _context.UserContact.FirstOrDefaultAsync(user => user.UserName.Equals(other)).Result;
                 string current = JsonConvert.SerializeObject(new { id = otherUser.UserName,
-                                                                    server = otherUser.Server
-                                                                });//name = ...,last = ..., lastdate = ...
+                    server = otherUser.Server
+                });//name = ...,last = ..., lastdate = ...
                 toReturn.Add(current);
             }
             string final = "[";
@@ -63,7 +63,6 @@ namespace ChatApi.Controllers
         [HttpPost]
         // [ValidateAntiForgeryToken]
         [IgnoreAntiforgeryToken]
-
 
         public async Task Create([Bind("UserName,ContactOf,NickName,Server")] UserContact contact)
         {
@@ -120,7 +119,7 @@ namespace ChatApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Edit(string? id, [Bind("NickName,Server")] UserContact contact)
+        public async Task<IActionResult> EditAsync(string? id, [Bind("NickName,Server")] UserContact contact)
         {
             string myId = "string";
             if (id == null || _context.UserContact == null)
@@ -139,15 +138,15 @@ namespace ChatApi.Controllers
             }
             chosenContact.NickName = contact.NickName;
             chosenContact.Server = contact.Server;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return Ok();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(string? id)
+        public async Task<IActionResult> DeleteAsync(string? id)
         {
             string myId = "string";
-            if (id == null || _context.UserContact == null)
+            if (id == null || _context.UserContact == null || _context.Chat == null)
             {
                 return BadRequest();
             }
@@ -162,10 +161,110 @@ namespace ChatApi.Controllers
             {
                 return BadRequest("contact does not exist");
             }
+            var chosenChats = _context.Chat.Where(d => (d.Name1 == id && d.Name2 == myId) || (d.Name1 == myId && d.Name2 == id));
+            if (chosenChats == null || !chosenChats.Any())
+            {
+                return BadRequest("contact does not exist");
+            }
+            var chosenChat = chosenChats.FirstOrDefault();
+            if (chosenChat == null)
+            {
+                return BadRequest("contact does not exist");
+            }
+            _context.Chat.Remove(chosenChat);
             _context.UserContact.Remove(chosenContact);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return Ok();
         }
 
+        private Message? GetMessage(string? id, int id2, string myId) // return the correct message after the tests
+        {
+            if (id == null || _context.Message == null || _context.Chat == null)
+            {
+                return null;
+            }
+            Message? chosenMessage = _context.Message.Find(id2);
+            if (chosenMessage == null)
+            {
+                return null;
+            }
+            var chosenChats = _context.Chat.Where(d => d.Id == chosenMessage.ChatId && (d.Name1 == id && d.Name2 == myId) || (d.Name1 == myId && d.Name2 == id));
+            if (chosenChats == null || !chosenChats.Any())
+            {
+                return null;
+            }
+            var chosenChat = chosenChats.FirstOrDefault();
+            if (chosenChat == null)
+            {
+                return null;
+            }
+            return chosenMessage;
+        }
+
+        [HttpGet("{id}/[action]/{id2}")]
+        public IActionResult messages(string? id, int id2)
+        {
+            string myId = "string";
+            Message? message = GetMessage(id, id2, myId);
+            if (message == null)
+            {
+                return NotFound();
+            }
+            return Ok(new { id = id2, content = message.Content, created = message.Created.ToString(), sent = (message.Author == myId) });
+        }
+
+        [HttpPut("{id}/[action]/{id2}")]
+        public async Task<IActionResult> messages(string? id, int id2, [Bind("content")] Message message)
+        {
+            string myId = "string";
+            Message? messageToEdit = GetMessage(id, id2, myId);
+            if (messageToEdit == null)
+            {
+                return NotFound();
+            }
+            messageToEdit.Content = message.Content;
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+
+        [HttpDelete("{id}/messages/{id2}")]
+        public async Task<IActionResult> messagesDelete(string? id, int id2)
+        {
+            string myId = "string";
+            Message? messageToDelete = GetMessage(id, id2, myId);
+            if (messageToDelete == null)
+            {
+                return NotFound();
+            }
+            _context.Remove(messageToDelete);
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> invitations([Bind("from,to,server")] Invitation invitation)
+        {
+            if (_context.UserContact == null || _context.Chat == null || _context.User == null)
+            {
+                return BadRequest();
+            }
+            if (_context.User.Find(invitation.To) == null)
+            {
+                return NotFound();
+            }
+            UserContact contact = new();
+            contact.UserName = invitation.From;
+            contact.Server = invitation.Server;
+            contact.NickName = invitation.From;
+            contact.ContactOf = invitation.To;
+            _context.UserContact.Add(contact);
+
+            Chat chat = new();
+            chat.Name1 = invitation.To;
+            chat.Name2 = invitation.From;
+            _context.Chat.Add(chat);
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
     }
 }
