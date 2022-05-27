@@ -12,6 +12,5 @@ namespace ChatApi
         [ForeignKey("User")]
         public string? Name2 { get; set; }
         //public User? User2 { get; set; }
-        public ICollection<Message>? Messages { get; set; }
     }
 }
