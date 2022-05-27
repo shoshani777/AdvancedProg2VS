@@ -7,18 +7,43 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ChatApi;
 using ChatApi.Data;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace ChatApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]/[action]")]
     public class UsersController : ControllerBase
     {
         private readonly ChatApiContext _context;
+        private readonly IConfiguration _configuration;
 
-        public UsersController(ChatApiContext context)
+        public UsersController(ChatApiContext context, IConfiguration config)
         {
             _context = context;
+            _configuration = config;
+        }
+
+        private JwtSecurityToken GetToken(string userName)
+        {
+            var claims = new[]
+                    {
+                        new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.ToString()),
+                        new Claim("UserName", userName)
+                    };
+            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:SecretKey"]));
+            var mac = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+            var token = new JwtSecurityToken(
+                _configuration["JWT:Issuer"],
+                _configuration["JWT:Audience"],
+                claims,
+                expires: DateTime.Now.AddMinutes(20),
+                signingCredentials: mac
+            );
+            return token;
         }
 
         // GET: Users
@@ -29,40 +54,45 @@ namespace ChatApi.Controllers
                          await _context.User.ToListAsync() : new List<User> { };
         }
 
-        // GET: Users/Details/5
-        [HttpGet("{id}")]
-        public async Task<User> Details(string id)
-        {
-            if (id == null || _context.User == null)
-            {
-                return new User();
-            }
-
-            var user = await _context.User
-                .FirstOrDefaultAsync(m => m.UserName == id);
-            if (user == null)
-            {
-                return new User();
-            }
-
-            return user;
-        }
-
-        // POST: Users/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [ActionName("register")]
         [HttpPost]
-        // [ValidateAntiForgeryToken]
-        [IgnoreAntiforgeryToken]
-
-
-        public async Task Create([Bind("UserName,Password,NickName,Server")] User user)
+        public async Task<IActionResult> Register([Bind("UserName,Password,NickName")] User user)
         {
             if (ModelState.IsValid)
             {
+                var q = from u in _context.User
+                        where u.UserName == user.UserName
+                        select u;
+                if (q.Any())
+                {
+                    return BadRequest("username already exist");
+                }
                 _context.Add(user);
                 await _context.SaveChangesAsync();
+                return Ok(new JwtSecurityTokenHandler().WriteToken(GetToken(user.UserName)));
             }
+            return BadRequest();
+        }
+
+        [ActionName("login")]
+        [HttpPost]
+        public IActionResult Login([Bind("UserName,Password")] User user)
+        {
+            if (ModelState.IsValid)
+            {
+                var q = from u in _context.User
+                        where u.UserName == user.UserName && u.Password == user.Password
+                        select u;
+                if (q.Any())
+                {
+                    return Ok(new JwtSecurityTokenHandler().WriteToken(GetToken(user.UserName)));
+                }
+                else
+                {
+                    return BadRequest("incorrect username/password");
+                }
+            }
+            return BadRequest();
         }
     }
 }

@@ -4,6 +4,7 @@ using ChatApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ChatApi.Migrations
 {
     [DbContext(typeof(ChatApiContext))]
-    partial class ChatApiContextModelSnapshot : ModelSnapshot
+    [Migration("20220524220244_ContactOf")]
+    partial class ContactOf
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,7 +40,7 @@ namespace ChatApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Chat", (string)null);
+                    b.ToTable("Chat");
                 });
 
             modelBuilder.Entity("ChatApi.Message", b =>
@@ -52,28 +54,20 @@ namespace ChatApi.Migrations
                     b.Property<string>("Author")
                         .HasColumnType("nvarchar(max)");
 
-<<<<<<< HEAD
                     b.Property<int>("ChatId")
-=======
-                    b.Property<int>("Chat")
->>>>>>> branch2
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("Created")
+                    b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-<<<<<<< HEAD
                     b.HasIndex("ChatId");
 
-                    b.ToTable("Message", (string)null);
-=======
                     b.ToTable("Message");
->>>>>>> branch2
                 });
 
             modelBuilder.Entity("ChatApi.User", b =>
@@ -89,7 +83,7 @@ namespace ChatApi.Migrations
 
                     b.HasKey("UserName");
 
-                    b.ToTable("User", (string)null);
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("ChatApi.UserContact", b =>
@@ -108,9 +102,8 @@ namespace ChatApi.Migrations
 
                     b.HasKey("UserName");
 
-                    b.ToTable("UserContact", (string)null);
+                    b.ToTable("UserContact");
                 });
-<<<<<<< HEAD
 
             modelBuilder.Entity("ChatApi.Message", b =>
                 {
@@ -125,8 +118,6 @@ namespace ChatApi.Migrations
                 {
                     b.Navigation("Messages");
                 });
-=======
->>>>>>> branch2
 #pragma warning restore 612, 618
         }
     }

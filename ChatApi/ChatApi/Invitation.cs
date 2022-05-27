@@ -6,4 +6,8 @@
         public string? To { get; set; }
         public string? Server { get; set; }
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> branch2

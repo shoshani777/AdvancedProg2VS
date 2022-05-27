@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ChatApi;
 using ChatApi.Data;
+using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json;
 
 namespace ChatApi.Controllers
@@ -33,7 +34,7 @@ namespace ChatApi.Controllers
             if(_context.Chat==null || _context.Message==null || _context.UserContact == null)
                 return NotFound();
             List<string> toReturn = new List<string>();
-            foreach (var chat in await _context.Chat.Where(chat=> chat.Name1.Equals(currUserName)||
+            foreach (var chat in await _context.Chat.Where(chat => chat.Name1.Equals(currUserName) ||
                                                             chat.Name2.Equals(currUserName)).ToListAsync())
             {
                 if (chat.Name2 == null || chat.Name1 == null)
@@ -73,7 +74,6 @@ namespace ChatApi.Controllers
         [HttpPost]
         // [ValidateAntiForgeryToken]
         [IgnoreAntiforgeryToken]
-
 
         public async Task<IActionResult> addUser([Bind("id")] string id,[Bind("name")] string name,[Bind("server")] string server)
         {
@@ -205,7 +205,6 @@ namespace ChatApi.Controllers
             var chosenContact = chosenContacts.FirstOrDefault();
             if (chosenContact == null)
                 return NotFound();
-
             List<Message> allMessages = await _context.Message.Where(msg => msg.Chat.Equals(chosenChat.Id)).ToListAsync();
             allMessages = allMessages.OrderBy(msg => msg.Created).ToList();
             Message? lastMsg = allMessages.LastOrDefault();
@@ -267,6 +266,8 @@ namespace ChatApi.Controllers
             Message? chosenMessage = _context.Message.Find(id2);
             if (chosenMessage == null)
                 return null;
+
+            }
             var chosenChats = _context.Chat.Where(d => d.Id == chosenMessage.Chat && (d.Name1 == id && d.Name2 == myId) || (d.Name1 == myId && d.Name2 == id));
             if (chosenChats == null || !chosenChats.Any())
                 return null;
@@ -275,6 +276,7 @@ namespace ChatApi.Controllers
                 return null;
             return chosenMessage;
         }
+        
         [HttpGet("{id}/[action]/{id2}")]
         public IActionResult messages(string? id, int id2)
         {
@@ -330,6 +332,6 @@ namespace ChatApi.Controllers
             await _context.SaveChangesAsync();
             return CreatedAtAction("invitations", new { id = chat.Id }, chat);
         }
-
+  
     }
 }
