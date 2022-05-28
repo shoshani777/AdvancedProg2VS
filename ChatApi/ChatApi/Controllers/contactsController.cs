@@ -67,7 +67,7 @@ namespace ChatApi.Controllers
         // [ValidateAntiForgeryToken]
         [IgnoreAntiforgeryToken]
 
-        public async Task<IActionResult> addUser([Bind("id")] string id, [Bind("name")] string name, [Bind("server")] string server)
+        public async Task<IActionResult> addUser([FromBody][Bind("id")] string id, [FromBody][Bind("name")] string name, [FromBody][Bind("server")] string server)
         {
             const string currUserName = "user1";
             if (ModelState.IsValid)
@@ -137,7 +137,7 @@ namespace ChatApi.Controllers
         }
 
         [HttpPost("{id}/messages")]
-        public async Task<IActionResult> NewMessage(string id, [Bind("content")] string content)
+        public async Task<IActionResult> NewMessage(string id, [FromBody][Bind("content")] string content)
         {
             const string currUserName = "user1";
             if (_context.Chat == null || _context.UserContact == null)
@@ -156,7 +156,7 @@ namespace ChatApi.Controllers
             return CreatedAtAction("NewMessage", new { id = newMsg.Id }, newMsg);
         }
         [HttpPost("transfer")]
-        public async Task<IActionResult> transfer([Bind("from")] string from, [Bind("to")] string to, [Bind("content")] string content)
+        public async Task<IActionResult> transfer([FromBody][Bind("from")] string from, [FromBody][Bind("to")] string to, [FromBody][Bind("content")] string content)
         {
             if (_context.Chat == null)
                 return NotFound();
@@ -211,7 +211,7 @@ namespace ChatApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditAsync(string? id, [Bind("NickName,Server")] UserContact contact)
+        public async Task<IActionResult> EditAsync(string? id, [FromBody][Bind("NickName,Server")] UserContact contact)
         {
             string myId = "user1";
             if (id == null || _context.UserContact == null)
@@ -283,7 +283,7 @@ namespace ChatApi.Controllers
         }
 
         [HttpPut("{id}/[action]/{id2}")]
-        public async Task<IActionResult> messages(string? id, int id2, [Bind("content")] string content)
+        public async Task<IActionResult> messages(string? id, int id2, [FromBody][Bind("content")] string content)
         {
             string myId = "user1";
             Message? messageToEdit = GetMessage(id, id2, myId).Result;
@@ -307,7 +307,7 @@ namespace ChatApi.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> invitations([Bind("from,to,server")] Invitation invitation)
+        public async Task<IActionResult> invitations([FromBody][Bind("from,to,server")] Invitation invitation)
         {
             if (_context.UserContact == null || _context.Chat == null || _context.User == null)
                 return NotFound();
