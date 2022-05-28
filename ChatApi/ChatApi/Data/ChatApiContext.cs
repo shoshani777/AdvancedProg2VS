@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using ChatApi;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace ChatApi.Data
 {
     public class ChatApiContext : DbContext
     {
-        public ChatApiContext (DbContextOptions<ChatApiContext> options)
+        public ChatApiContext(DbContextOptions<ChatApiContext> options)
             : base(options)
         {
         }

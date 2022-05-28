@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using ChatApi.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ChatApi;
-using ChatApi.Data;
 
 namespace ChatApi.Controllers
 {
@@ -25,10 +19,10 @@ namespace ChatApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Message>>> GetMessage()
         {
-          if (_context.Message == null)
-          {
-              return NotFound();
-          }
+            if (_context.Message == null)
+            {
+                return NotFound();
+            }
             return await _context.Message.ToListAsync();
         }
 
@@ -36,10 +30,10 @@ namespace ChatApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Message>> GetMessage(int id)
         {
-          if (_context.Message == null)
-          {
-              return NotFound();
-          }
+            if (_context.Message == null)
+            {
+                return NotFound();
+            }
             var message = await _context.Message.FindAsync(id);
 
             if (message == null)
@@ -86,10 +80,10 @@ namespace ChatApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Message>> PostMessage(Message message)
         {
-          if (_context.Message == null)
-          {
-              return Problem("Entity set 'ChatApiContext.Message'  is null.");
-          }
+            if (_context.Message == null)
+            {
+                return Problem("Entity set 'ChatApiContext.Message'  is null.");
+            }
             _context.Message.Add(message);
             await _context.SaveChangesAsync();
 

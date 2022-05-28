@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using ChatApi.Data;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using ChatApi;
-using ChatApi.Data;
-using System.Security.Claims;
-using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace ChatApi.Controllers
@@ -60,13 +55,19 @@ namespace ChatApi.Controllers
         {
             if (ModelState.IsValid)
             {
-                var q = from u in _context.User
-                        where u.UserName == user.UserName
-                        select u;
-                if (q.Any())
+                if (_context.User == null || user.Password == null)
+                    return NotFound();
+                string afterHash = "";
+                using (SHA256 mySHA256 = SHA256.Create())
                 {
-                    return BadRequest("username already exist");
+                    byte[] bytes = Encoding.ASCII.GetBytes(user.Password);
+                    afterHash = Encoding.ASCII.GetString(mySHA256.ComputeHash(bytes));
                 }
+                List<User> users = _context.User.Where(d => d.UserName == user.UserName && d.Password == afterHash).ToList();                
+                if (users.Count>0)
+                    return NotFound();
+                if (user.UserName == null)
+                    return NotFound();
                 _context.Add(user);
                 await _context.SaveChangesAsync();
                 return Ok(new JwtSecurityTokenHandler().WriteToken(GetToken(user.UserName)));
@@ -80,19 +81,24 @@ namespace ChatApi.Controllers
         {
             if (ModelState.IsValid)
             {
-                var q = from u in _context.User
-                        where u.UserName == user.UserName && u.Password == user.Password
-                        select u;
-                if (q.Any())
+                if (_context.User == null || user.Password == null)
+                    return NotFound();
+                string afterHash = "";
+                using (SHA256 mySHA256 = SHA256.Create())
                 {
-                    return Ok(new JwtSecurityTokenHandler().WriteToken(GetToken(user.UserName)));
+                    byte[] bytes = Encoding.ASCII.GetBytes(user.Password);
+                    afterHash = Encoding.ASCII.GetString(mySHA256.ComputeHash(bytes));
                 }
-                else
+                List<User> users = _context.User.Where(d => d.UserName == user.UserName && d.Password == afterHash).ToList();
+                if (users.Count>0)
                 {
-                    return BadRequest("incorrect username/password");
+                    if(user.UserName!=null)
+                        return Ok(new JwtSecurityTokenHandler().WriteToken(GetToken(user.UserName)));
+                    return NotFound();
                 }
+                return NotFound();
             }
-            return BadRequest();
+            return NotFound();
         }
     }
 }
