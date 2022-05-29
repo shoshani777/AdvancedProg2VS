@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Net.Http.Headers;
 
 namespace ChatApi.Controllers
 {
@@ -16,12 +19,19 @@ namespace ChatApi.Controllers
         {
             _context = context;
         }
+        private static string GetUserName(HttpRequest request)
+        {
+            string token = request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            string userName = new JwtSecurityTokenHandler().ReadJwtToken(token).Payload.Claims.ElementAt(1).Value.ToString();
+            return userName;
+        }
 
         // GET: Users
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> IndexAsync()
         {
-            const string currUserName = "user1";
+            string currUserName = GetUserName(Request);
             if (_context.Chat == null || _context.Message == null || _context.UserContact == null)
                 return NotFound();
             List<string> toReturn = new List<string>();
@@ -78,9 +88,10 @@ namespace ChatApi.Controllers
 
 
         [HttpPut("contact/{id}")]
+        [Authorize]
         public async Task<IActionResult> EditAsync(string? id, [FromBody][Bind("unread,unreadMark,isClicked")] ContactForEditting contact)
         {
-            string myId = "user1";
+            string myId = GetUserName(Request);
             if (id == null || _context.UserContact == null)
                 return NotFound();
             var chosenContacts = _context.UserContact.Where(d => d.UserName == id && d.ContactOf == myId);
