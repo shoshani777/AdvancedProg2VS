@@ -1,7 +1,13 @@
 ﻿using ChatApi.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ChatApi.Controllers
 {
@@ -17,12 +23,20 @@ namespace ChatApi.Controllers
             _context = context;
         }
 
+        private static string GetUserName(HttpRequest request)
+        {
+            string token = request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            string userName = new JwtSecurityTokenHandler().ReadJwtToken(token).Payload.Claims.ElementAt(1).Value.ToString();
+            return userName;
+        }
+
 
         // GET: Users
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> IndexAsync()
         {
-            const string currUserName = "user1";
+            string currUserName = GetUserName(Request);
             if (_context.Chat == null || _context.Message == null || _context.UserContact == null)
                 return NotFound();
             List<string> toReturn = new List<string>();
