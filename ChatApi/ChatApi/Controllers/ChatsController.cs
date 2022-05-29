@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using ChatApi.Data;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using ChatApi;
-using ChatApi.Data;
 
 namespace ChatApi.Controllers
 {
@@ -25,9 +19,9 @@ namespace ChatApi.Controllers
         [HttpGet]
         public async Task<ICollection<Chat>> Index()
         {
-              return _context.Chat != null ? 
-                          await _context.Chat.ToListAsync() :
-                          new List<Chat> { };
+            return _context.Chat != null ?
+                        await _context.Chat.ToListAsync() :
+                        new List<Chat> { };
         }
 
         // GET: Chats/Details/5

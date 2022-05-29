@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ChatApi.Migrations
 {
     [DbContext(typeof(ChatApiContext))]
-    [Migration("20220521142214_Init6")]
-    partial class Init6
+    [Migration("20220529094649_moreChatsAtrributes")]
+    partial class moreChatsAtrributes
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -38,6 +38,15 @@ namespace ChatApi.Migrations
                     b.Property<string>("Name2")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("isClicked")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("unread")
+                        .HasColumnType("int");
+
+                    b.Property<int>("unreadMark")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("Chat");
@@ -51,23 +60,19 @@ namespace ChatApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("AuthorUserName")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("Author")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ChatId")
+                    b.Property<int>("Chat")
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Created")
+                    b.Property<DateTime?>("Created")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AuthorUserName");
-
-                    b.HasIndex("ChatId");
 
                     b.ToTable("Message");
                 });
@@ -83,32 +88,28 @@ namespace ChatApi.Migrations
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Server")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("UserName");
 
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("ChatApi.Message", b =>
+            modelBuilder.Entity("ChatApi.UserContact", b =>
                 {
-                    b.HasOne("ChatApi.User", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorUserName");
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.HasOne("ChatApi.Chat", "Chat")
-                        .WithMany("Messages")
-                        .HasForeignKey("ChatId");
+                    b.Property<string>("ContactOf")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Navigation("Author");
+                    b.Property<string>("NickName")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Navigation("Chat");
-                });
+                    b.Property<string>("Server")
+                        .HasColumnType("nvarchar(max)");
 
-            modelBuilder.Entity("ChatApi.Chat", b =>
-                {
-                    b.Navigation("Messages");
+                    b.HasKey("UserName");
+
+                    b.ToTable("UserContact");
                 });
 #pragma warning restore 612, 618
         }

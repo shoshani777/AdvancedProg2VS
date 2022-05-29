@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ChatApi.Migrations
 {
     [DbContext(typeof(ChatApiContext))]
-    [Migration("20220524220244_ContactOf")]
-    partial class ContactOf
+    [Migration("20220529095327_chatsAtrributes")]
+    partial class chatsAtrributes
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -54,18 +54,16 @@ namespace ChatApi.Migrations
                     b.Property<string>("Author")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ChatId")
+                    b.Property<int>("Chat")
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Created")
+                    b.Property<DateTime?>("Created")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ChatId");
 
                     b.ToTable("Message");
                 });
@@ -100,23 +98,18 @@ namespace ChatApi.Migrations
                     b.Property<string>("Server")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("isClicked")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("unread")
+                        .HasColumnType("int");
+
+                    b.Property<int>("unreadMark")
+                        .HasColumnType("int");
+
                     b.HasKey("UserName");
 
                     b.ToTable("UserContact");
-                });
-
-            modelBuilder.Entity("ChatApi.Message", b =>
-                {
-                    b.HasOne("ChatApi.Chat", null)
-                        .WithMany("Messages")
-                        .HasForeignKey("ChatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ChatApi.Chat", b =>
-                {
-                    b.Navigation("Messages");
                 });
 #pragma warning restore 612, 618
         }

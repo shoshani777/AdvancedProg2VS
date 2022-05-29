@@ -38,7 +38,7 @@ namespace ChatApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Chat", (string)null);
+                    b.ToTable("Chat");
                 });
 
             modelBuilder.Entity("ChatApi.Message", b =>
@@ -52,11 +52,7 @@ namespace ChatApi.Migrations
                     b.Property<string>("Author")
                         .HasColumnType("nvarchar(max)");
 
-<<<<<<< HEAD
-                    b.Property<int>("ChatId")
-=======
                     b.Property<int>("Chat")
->>>>>>> branch2
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
@@ -67,13 +63,7 @@ namespace ChatApi.Migrations
 
                     b.HasKey("Id");
 
-<<<<<<< HEAD
-                    b.HasIndex("ChatId");
-
-                    b.ToTable("Message", (string)null);
-=======
                     b.ToTable("Message");
->>>>>>> branch2
                 });
 
             modelBuilder.Entity("ChatApi.User", b =>
@@ -89,7 +79,7 @@ namespace ChatApi.Migrations
 
                     b.HasKey("UserName");
 
-                    b.ToTable("User", (string)null);
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("ChatApi.UserContact", b =>
@@ -100,33 +90,28 @@ namespace ChatApi.Migrations
                     b.Property<string>("ContactOf")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("NickName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Server")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("isClicked")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("unread")
+                        .HasColumnType("int");
+
+                    b.Property<int>("unreadMark")
+                        .HasColumnType("int");
+
                     b.HasKey("UserName");
 
-                    b.ToTable("UserContact", (string)null);
+                    b.ToTable("UserContact");
                 });
-<<<<<<< HEAD
-
-            modelBuilder.Entity("ChatApi.Message", b =>
-                {
-                    b.HasOne("ChatApi.Chat", null)
-                        .WithMany("Messages")
-                        .HasForeignKey("ChatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ChatApi.Chat", b =>
-                {
-                    b.Navigation("Messages");
-                });
-=======
->>>>>>> branch2
 #pragma warning restore 612, 618
         }
     }
