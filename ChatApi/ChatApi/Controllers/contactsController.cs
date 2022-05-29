@@ -273,7 +273,7 @@ namespace ChatApi.Controllers
                 return null;
             return chosenMessage;
         }
-
+        
         [HttpGet("{id}/[action]/{id2}")]
         public IActionResult messages(string? id, int id2)
         {
@@ -340,6 +340,5 @@ namespace ChatApi.Controllers
             await _context.SaveChangesAsync();
             return CreatedAtAction("invitations", new { id = chat.Id }, chat);
         }
-
     }
 }
