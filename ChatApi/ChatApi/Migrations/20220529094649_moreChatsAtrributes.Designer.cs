@@ -4,6 +4,7 @@ using ChatApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ChatApi.Migrations
 {
     [DbContext(typeof(ChatApiContext))]
-    partial class ChatApiContextModelSnapshot : ModelSnapshot
+    [Migration("20220529094649_moreChatsAtrributes")]
+    partial class moreChatsAtrributes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,6 +37,15 @@ namespace ChatApi.Migrations
 
                     b.Property<string>("Name2")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isClicked")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("unread")
+                        .HasColumnType("int");
+
+                    b.Property<int>("unreadMark")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -90,23 +101,11 @@ namespace ChatApi.Migrations
                     b.Property<string>("ContactOf")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("NickName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Server")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("isClicked")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("unread")
-                        .HasColumnType("int");
-
-                    b.Property<int>("unreadMark")
-                        .HasColumnType("int");
 
                     b.HasKey("UserName");
 

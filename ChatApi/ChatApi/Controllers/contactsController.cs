@@ -67,25 +67,27 @@ namespace ChatApi.Controllers
         // [ValidateAntiForgeryToken]
         [IgnoreAntiforgeryToken]
 
-        public async Task<IActionResult> addUser([FromBody][Bind("id")] string id, [FromBody][Bind("name")] string name, [FromBody][Bind("server")] string server)
+        public async Task<IActionResult> addContact([FromBodyAttribute][Bind("id,name,server")] ContactForAdding ContactToAdd)
         {
             const string currUserName = "user1";
             if (ModelState.IsValid)
             {
                 if (_context.Chat == null || _context.Message == null || _context.UserContact == null)
                     return NotFound();
+                if(ContactToAdd.Name ==null || ContactToAdd.Id ==null || ContactToAdd.Server == null)
+                    return NotFound();
                 bool isContactExist = (await _context.UserContact.FirstOrDefaultAsync(
-                contact => currUserName.Equals(contact.ContactOf) && id.Equals(contact.UserName))) != null;
-                UserContact newContact = new UserContact { ContactOf = currUserName, Server = server, UserName = id, NickName = name };
+                contact => currUserName.Equals(contact.ContactOf) && ContactToAdd.Id.Equals(contact.UserName))) != null;
+                UserContact newContact = new UserContact { ContactOf = currUserName, Server = ContactToAdd.Server, UserName = ContactToAdd.Id, NickName = ContactToAdd.Name };
                 if (!isContactExist)
                 {
                     _context.Add(newContact);
                     await _context.SaveChangesAsync();
                 }
                 bool isChatExist = (await _context.Chat.FirstOrDefaultAsync(
-                chat => (currUserName.Equals(chat.Name1) && id.Equals(chat.Name2))
-                  || (id.Equals(chat.Name1) && currUserName.Equals(chat.Name2)))) != null;
-                Chat newChat = new Chat { Name1 = currUserName, Name2 = id };
+                chat => (currUserName.Equals(chat.Name1) && ContactToAdd.Id.Equals(chat.Name2))
+                  || (ContactToAdd.Id.Equals(chat.Name1) && currUserName.Equals(chat.Name2)))) != null;
+                Chat newChat = new Chat { Name1 = currUserName, Name2 = ContactToAdd.Id };
                 if (!isChatExist)
                 {
                     _context.Add(newChat);
@@ -93,7 +95,7 @@ namespace ChatApi.Controllers
                 }
                 //sending invite to "server", composed of: from - currUserName, to - id, server - server
 
-                return CreatedAtAction("addUser", new { id = newChat.Id }, newChat);
+                return CreatedAtAction("addContact", new { id = newChat.Id }, newChat);
             }
             return NotFound();
         }
@@ -156,17 +158,17 @@ namespace ChatApi.Controllers
             return CreatedAtAction("NewMessage", new { id = newMsg.Id }, newMsg);
         }
         [HttpPost("transfer")]
-        public async Task<IActionResult> transfer([FromBody][Bind("from")] string from, [FromBody][Bind("to")] string to, [FromBody][Bind("content")] string content)
+        public async Task<IActionResult> transfer([FromBody][Bind("from,to,content")] Transfer transfer)
         {
-            if (_context.Chat == null)
+            if (_context.Chat == null || transfer.From ==null || transfer.To==null|| transfer.Content == null)
                 return NotFound();
             Chat? chat = await _context.Chat.FirstOrDefaultAsync(
-                chat => (to.Equals(chat.Name1) && from.Equals(chat.Name2))
-                  || (from.Equals(chat.Name1) && to.Equals(chat.Name2)));
+                chat => (transfer.To.Equals(chat.Name1) && transfer.From.Equals(chat.Name2))
+                  || (transfer.From.Equals(chat.Name1) && transfer.To.Equals(chat.Name2)));
             if (chat == null)
                 return NotFound();
             int chatId = chat.Id;
-            Message newMsg = new Message { Author = from, Chat = chatId, Content = content, Created = DateTime.Now };
+            Message newMsg = new Message { Author = transfer.From, Chat = chatId, Content = transfer.Content, Created = DateTime.Now };
             _context.Add(newMsg);
             await _context.SaveChangesAsync();
             return CreatedAtAction("NewMessage", new { id = newMsg.Id }, newMsg);
@@ -320,6 +322,8 @@ namespace ChatApi.Controllers
             contact.Server = invitation.Server;
             contact.NickName = invitation.From;
             contact.ContactOf = invitation.To;
+            contact.Created = DateTime.Now;
+
             UserContact? prevUserContact = await _context.UserContact.FirstOrDefaultAsync(
                 userContact => invitation.From.Equals(userContact.UserName) && invitation.To.Equals(userContact.ContactOf));
             if(prevUserContact==null)

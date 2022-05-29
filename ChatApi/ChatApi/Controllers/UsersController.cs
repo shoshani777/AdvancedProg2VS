@@ -68,6 +68,7 @@ namespace ChatApi.Controllers
                     return NotFound();
                 if (user.UserName == null)
                     return NotFound();
+                user.Password = afterHash;
                 _context.Add(user);
                 await _context.SaveChangesAsync();
                 return Ok(new JwtSecurityTokenHandler().WriteToken(GetToken(user.UserName)));
