@@ -5,6 +5,8 @@ using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
+using ChatApi.Hubs;
 
 namespace ChatApi.Controllers
 {
@@ -14,10 +16,12 @@ namespace ChatApi.Controllers
     {
 
         private readonly ChatApiContext _context;
+        private readonly IHubContext<ChatHub, IChatClient> _chatHub;
 
-        public contactsController(ChatApiContext context)
+        public contactsController(ChatApiContext context, IHubContext<ChatHub, IChatClient> chatHub)
         {
             _context = context;
+            _chatHub = chatHub;
         }
 
         private static string GetUserName(HttpRequest request)
@@ -77,10 +81,11 @@ namespace ChatApi.Controllers
         [HttpPost]
         // [ValidateAntiForgeryToken]
         [IgnoreAntiforgeryToken]
+        [Authorize]
 
         public async Task<IActionResult> addContact([FromBodyAttribute][Bind("id,name,server")] ContactForAdding ContactToAdd)
         {
-            const string currUserName = "user1";
+            string currUserName = GetUserName(Request);
             if (ModelState.IsValid)
             {
                 if (_context.Chat == null || _context.Message == null || _context.UserContact == null)
@@ -112,9 +117,10 @@ namespace ChatApi.Controllers
         }
 
         [HttpGet("{id}/messages")]
+        [Authorize]
         public async Task<IActionResult> GetMessages(string id)
         {
-            const string currUserName = "user1";
+            string currUserName = GetUserName(Request);
             if (_context.Chat == null || _context.Message == null)
                 return NotFound();
             List<string> toReturn = new List<string>();
@@ -150,9 +156,10 @@ namespace ChatApi.Controllers
         }
 
         [HttpPost("{id}/messages")]
-        public async Task<IActionResult> NewMessage(string id, [FromBody][Bind("content")] string content)
+        [Authorize]
+        public async Task<IActionResult> NewMessage(string? id, [FromBody][Bind("content")] MessageContent messageContent)
         {
-            const string currUserName = "user1";
+            string currUserName = GetUserName(Request);
             if (_context.Chat == null || _context.UserContact == null)
                 return NotFound();
             Chat? chat = await _context.Chat.FirstOrDefaultAsync(
@@ -161,7 +168,7 @@ namespace ChatApi.Controllers
             if (chat == null)
                 return NotFound();
             int chatId = chat.Id;
-            Message newMsg = new Message { Author = currUserName, Chat = chatId, Content = content, Created = DateTime.Now };
+            Message newMsg = new Message { Author = currUserName, Chat = chatId, Content = messageContent.Content, Created = DateTime.Now };
             _context.Add(newMsg);
             await _context.SaveChangesAsync();
             //calling transfer to get the message to the other user - id - located at server
@@ -182,16 +189,17 @@ namespace ChatApi.Controllers
             Message newMsg = new Message { Author = transfer.From, Chat = chatId, Content = transfer.Content, Created = DateTime.Now };
             _context.Add(newMsg);
             await _context.SaveChangesAsync();
+            await _chatHub.Clients.All.ReceiveMessage(newMsg, transfer.To);
             return CreatedAtAction("NewMessage", new { id = newMsg.Id }, newMsg);
         }
 
 
-        //gilad
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> Details(string? id)
         {
-            string myId = "user1";
+            string myId = GetUserName(Request);
             if (id == null || _context.UserContact == null || _context.Chat == null || _context.Message == null)
             {
                 return NotFound();
@@ -224,9 +232,10 @@ namespace ChatApi.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> EditAsync(string? id, [FromBody][Bind("NickName,Server")] UserContact contact)
         {
-            string myId = "user1";
+            string myId = GetUserName(Request);
             if (id == null || _context.UserContact == null)
                 return NotFound();
             var chosenContacts = _context.UserContact.Where(d => d.UserName == id && d.ContactOf == myId);
@@ -242,9 +251,10 @@ namespace ChatApi.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteAsync(string? id)
         {
-            string myId = "user1";
+            string myId = GetUserName(Request);
             if (id == null || _context.UserContact == null || _context.Chat == null || _context.Message == null)
                 return NotFound();
 
@@ -286,9 +296,10 @@ namespace ChatApi.Controllers
         }
         
         [HttpGet("{id}/[action]/{id2}")]
+        [Authorize]
         public IActionResult messages(string? id, int id2)
         {
-            string myId = "user1";
+            string myId = GetUserName(Request);
             Message? message = GetMessage(id, id2, myId).Result;
             if (message == null)
                 return NotFound();
@@ -296,21 +307,23 @@ namespace ChatApi.Controllers
         }
 
         [HttpPut("{id}/[action]/{id2}")]
-        public async Task<IActionResult> messages(string? id, int id2, [FromBody][Bind("content")] string content)
+        [Authorize]
+        public async Task<IActionResult> messages(string? id, int id2, [FromBody][Bind("content")] MessageContent messageContent)
         {
-            string myId = "user1";
+            string myId = GetUserName(Request);
             Message? messageToEdit = GetMessage(id, id2, myId).Result;
             if (messageToEdit == null)
                 return NotFound();
-            messageToEdit.Content = content;
+            messageToEdit.Content = messageContent.Content;
             await _context.SaveChangesAsync();
             return NoContent();
         }
 
         [HttpDelete("{id}/messages/{id2}")]
+        [Authorize]
         public async Task<IActionResult> messagesDelete(string? id, int id2)
         {
-            string myId = "user1";
+            string myId = GetUserName(Request);
             Message? messageToDelete = GetMessage(id, id2, myId).Result;
             if (messageToDelete == null)
                 return NotFound();
