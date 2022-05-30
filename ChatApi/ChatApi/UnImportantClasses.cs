@@ -26,5 +26,9 @@
         public bool? isClicked { get; set; }
 
     }
+    public class MessageContent
+    {
+        public string? Content { get; set; }
+    }
 }
 
