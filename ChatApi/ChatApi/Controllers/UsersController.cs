@@ -63,9 +63,9 @@ namespace ChatApi.Controllers
                     byte[] bytes = Encoding.ASCII.GetBytes(user.Password);
                     afterHash = Encoding.ASCII.GetString(mySHA256.ComputeHash(bytes));
                 }
-                List<User> users = _context.User.Where(d => d.UserName == user.UserName && d.Password == afterHash).ToList();                
+                List<User> users = _context.User.Where(d => d.UserName == user.UserName).ToList();                
                 if (users.Count>0)
-                    return NotFound();
+                    return NotFound("username already exist");
                 if (user.UserName == null)
                     return NotFound();
                 user.Password = afterHash;
@@ -97,9 +97,9 @@ namespace ChatApi.Controllers
                         return Ok(new JwtSecurityTokenHandler().WriteToken(GetToken(user.UserName)));
                     return NotFound();
                 }
-                return NotFound();
+                return NotFound("incorrect username/password");
             }
-            return NotFound();
+            return BadRequest();
         }
     }
 }

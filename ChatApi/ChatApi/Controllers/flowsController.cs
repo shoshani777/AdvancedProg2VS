@@ -26,12 +26,6 @@ namespace ChatApi.Controllers
             return userName;
         }
 
-        private static string GetUserName(HttpRequest request)
-        {
-            string token = request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
-            string userName = new JwtSecurityTokenHandler().ReadJwtToken(token).Payload.Claims.ElementAt(1).Value.ToString();
-            return userName;
-        }
         // GET: Users
         [HttpGet]
         [Authorize]
