@@ -1,4 +1,4 @@
-﻿namespace ChatApi.Hubs
+namespace ChatApi.Hubs
 {
     public interface IChatClient
     {

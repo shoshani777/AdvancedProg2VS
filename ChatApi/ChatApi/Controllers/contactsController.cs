@@ -80,6 +80,7 @@ namespace ChatApi.Controllers
         [Authorize]
         // [ValidateAntiForgeryToken]
         [IgnoreAntiforgeryToken]
+        [Authorize]
 
         public async Task<IActionResult> addContact([FromBody][Bind("id,name,server")] ContactForAdding ContactToAdd)
         {
@@ -204,7 +205,6 @@ namespace ChatApi.Controllers
         }
 
 
-        //gilad
 
         [HttpGet("{id}")]
         [Authorize]
