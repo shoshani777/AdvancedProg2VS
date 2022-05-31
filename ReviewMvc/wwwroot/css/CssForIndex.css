@@ -1,0 +1,42 @@
+.score1{
+    background-color:orangered
+}
+.score2 {
+    background-color: orange
+}
+.score3 {
+    background-color: rgb(255, 252, 112)
+}
+.score4 {
+    background-color: lightgreen
+}
+.score5 {
+    background-color: lawngreen
+}
+.fullTable {
+    border: none;
+}
+.mainHeader{
+    text-align:center;
+}
+
+.formDiv {
+    margin-left: auto;
+    margin-right: auto;
+    width: fit-content;
+    padding-bottom: 20px;
+    padding-top: 20px;
+}
+
+.searchBtn{
+    background-color:lightgrey
+}
+.tableBody{
+    overflow-y:scroll;
+}
+.inputTxt {
+    display: initial;
+    width: 270px;
+    position: relative;
+    top: 1px;
+}

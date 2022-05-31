@@ -1,0 +1,30 @@
+﻿@model IEnumerable<AdvancedProgramming2Server.Models.Rating>
+
+
+@foreach (var item in Model) {
+        <tr class=@("score"+item.Score)>
+            <td>
+                @Html.DisplayFor(modelItem => item.Score)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Review)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Created)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.RatingId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.RatingId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.RatingId">Delete</a>
+            </td>
+        </tr>
+}
+
+
+
+@section Scripts{
+    <script src="~/js/Search.js"></script>
+}

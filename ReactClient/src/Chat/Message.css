@@ -1,0 +1,54 @@
+.Message {
+  word-wrap: break-word;
+  border-radius: 0.5rem;
+  padding: 0.5rem; /* text distance from border */
+  min-height: 2rem;
+  width: 60%;
+  position: relative;
+}
+
+.author {
+  font-size: large;
+}
+
+.Message:before {
+  content: "";
+  position: absolute;
+  top: 100%;
+}
+
+.Message.me:before {
+  left: 1rem;
+  border-top: 1rem solid lightblue;
+  border-right: 1rem solid transparent;
+}
+
+.Message.other:before {
+  right: 1rem;
+  border-top: 1rem solid lightgreen;
+  border-left: 1rem solid transparent;
+}
+  
+.Message.log {
+  margin: auto;
+  text-align: center;
+  background-color: yellow;
+  width: 30%;
+}
+
+.Message.me {
+  background-color: lightblue;
+}
+
+.Message.other {
+  margin-left: auto; 
+  margin-right: 0;
+  background-color: lightgreen;
+}
+
+.statusCs{
+  text-align: end;
+  
+}
+
+  

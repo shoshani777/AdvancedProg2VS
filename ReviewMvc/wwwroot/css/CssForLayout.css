@@ -1,0 +1,28 @@
+.navItem {
+    background-color: #c8ffb2;
+    padding-bottom:8px;
+    padding-top:8px;
+}
+
+.noPadding{
+    padding:0;
+}
+
+.mainLink {
+    position: relative;
+    left: 43vw;
+}
+
+.secondaryLinkToCreate {
+    position: relative;
+    left: calc(43vw + 150px);
+}
+
+.secondaryLinkToIndex {
+    position: relative;
+    left: calc(33vw - 300px);
+}
+
+body{
+    background-color:aqua;
+}

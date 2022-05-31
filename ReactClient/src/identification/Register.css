@@ -1,0 +1,107 @@
+.signImgReg{
+  float: right;
+  width: 9rem;
+  position: relative;
+  right: 10vw;
+}
+.logInTbl{
+  margin: auto;
+  width:45vw;
+  margin-top: 15vh;
+  background-color: aliceblue;
+  outline: black;
+  border-width: 3px;
+}
+.transperantBorderReg{
+  /* border-color: black; */
+  border-color: aliceblue;
+}
+#addPicBtnId{
+  margin-right: 0;
+}
+.trHead{
+  height: 6rem;
+}
+.TrReg{
+  height: 4rem;
+}
+.uNameDiv{
+  white-space: nowrap;
+  /* height: 3rem; */
+}
+.uNameDescriptionTd{
+  width:7rem;
+}
+.nNameDiv{
+  white-space: nowrap;
+  /* height: 3rem; */
+}
+.nNameDescriptionTd{
+  width:7rem;
+}
+.logInHeader{
+  text-align: center;
+  font-size: 3.3rem;
+  margin-right: 2vw;
+}
+.a0marginBtm{
+  margin-bottom: 0%;
+  
+}
+.gap{
+  width:3vw;
+}
+.spn{
+  position: relative;
+  bottom: 0.3rem;
+}
+.vw12{
+  width:12vw;
+}
+#register{
+  position: relative;
+  left: 10vw;
+  width:7rem;
+  height: 3rem;
+  font-size: 1.5rem;
+}
+.pRegister{
+  position: relative;
+  bottom: 4px;
+  right: 1px;
+}
+.errorTr{
+  height: 7vh;
+}
+.errorTxt{
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #dc3545;
+}
+#errorReg{
+  text-align: left;
+  padding-left: 4vw;
+}
+.uNameP{
+  position: relative;
+  left:1.2rem;
+}
+.paswordP{
+  position: relative;
+  left:1.8rem;
+
+}
+.input-divReg{
+  text-align: center;
+  padding-left: 34px;
+}
+
+.spinner-border{
+  position: absolute;
+  top:0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}

@@ -1,0 +1,78 @@
+.group{
+    width: 22rem;
+    height: 75px;
+    padding: 0;
+    border: 0;
+}
+.icn{
+    padding-right: 5px;
+}
+.clickedgroup{
+    background-color: rgb(205, 205, 205)!important;
+}
+.group:hover{
+    cursor: pointer;
+    background-color: rgb(238, 238, 238);
+}
+.bigtbl{
+    width: 100%;
+}
+.img{
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: 100%;
+}
+.imgTd{
+    width:22%;
+}
+.textTd{
+    width: 78%;
+    padding: 0;
+    border-spacing: 0;
+    text-align: start;
+}
+.headln{
+    height:37px;
+    font-size: 1.45rem;
+}
+.subtitles{
+    height:30px;
+    font-size: large;
+}
+.smalltbl{
+    /* width: 100%; */
+    width:278px;
+    height: 100%;
+}
+.lastmsg{
+    padding-inline-start: 15%;
+    width:14.8rem;
+}
+.groupname{
+    padding-inline-start: 8%;
+    width: 218px;
+}
+.unreadTd{
+    width: 36px;
+    height: 38px;
+}
+.unreadDiv{
+    background-color: rgb(41, 219, 41);
+    border-radius: 100%;
+    font-size: small;
+    text-align: center;
+    color: white;
+    width:95%;
+    margin-top: 20%;
+}
+.lastMsgTime{
+    font-size: 12px;
+    float: right;
+    font-weight: bold;
+}
+.emptyTd{
+    width:22px;
+}
+.middleTr{
+    height: 8px;
+}

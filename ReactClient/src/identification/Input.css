@@ -1,0 +1,54 @@
+/* .inputCls{
+  background-color: black;
+  /* z-index: 1; 
+} */
+.err1{
+  z-index: 1;
+  position: relative;
+  left:22vw;
+  bottom: 2.3rem;
+  font-size: 1vw;
+  margin-top: 0.5vh;
+  /* width: 1px; */
+}
+.err2{
+  z-index: 1;
+  position: relative;
+  left:20vw;
+  bottom: 2.3rem;
+  font-size: 1vw;
+  margin-top: 0.5vh;
+  /* width: 1px; */
+}
+.err3{
+  z-index: 1;
+  position: relative;
+  left:13vw;
+  bottom: 2.3rem;
+  font-size: 0.8vw;
+  margin-top: 0.5vh;
+  /* width: 1px; */
+}
+.inputDiv1{
+  /* width:fit-content; */
+  width:35vw;
+}
+.inputDiv2{
+  /* width:fit-content; */
+  width:33vw;
+}
+.inputDiv3{
+  /* width:fit-content; */
+  width:23vw;
+}
+/* .allButLabel{
+} */
+.a0marginBtm{
+  margin-bottom: 0%;
+}
+/* .innerBlck{
+  display: inline-block;
+} */
+.bigDiv{
+  height: 3rem;
+}

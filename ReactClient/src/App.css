@@ -1,0 +1,18 @@
+.App {
+  text-align: center;
+}
+.webPageExit{
+  color: black;
+}
+.webPageExit:hover{
+  color: crimson;
+}
+.exitIcon{
+  background-color:crimson;
+  border-radius: 100%;
+  width:2rem;
+  height: 2rem;
+}
+.exitIcon:hover{
+  background-color:white;
+}

@@ -1,0 +1,19 @@
+.defualtChat{
+  background-color: #c8ffb2;
+  height: calc(74.5vh + 4.1rem);
+  width: calc(0.795 * (100vw - 371px));
+}
+.mainTxt{
+  padding-top: 13rem;
+  font-size: 6rem;
+  text-align: center;
+}
+.subTxt{
+  font-size: x-large;
+  text-align: center;
+
+}
+.lastTxt{
+  font-size: 2rem;
+  text-align: center;
+}

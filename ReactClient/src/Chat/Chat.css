@@ -1,0 +1,35 @@
+.groupColumn{
+  margin-top: 3%;
+  margin-bottom: 4%;
+}
+
+.table-container {
+  height: 4.1rem;
+}
+
+.chat-tbl{
+  width: 100%;
+  height: 4rem;
+  background-color: white;
+  border-left: 0.1rem solid grey;
+}
+.chatImg{
+  border-radius: 100%;
+  width: 4rem;
+  height: 4rem;
+}
+.imgTd{
+  vertical-align: top;
+  width: 4.3rem;
+}
+.chat-name{
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 3rem;
+  text-align: center;
+}
+.chatContainer {
+  display: flex;
+  flex-direction: column;
+  width: calc(0.795 * (100vw - 371px));
+  max-height: calc(4.1rem + 74.5vh);
+}
