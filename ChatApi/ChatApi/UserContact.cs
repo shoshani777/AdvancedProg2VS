@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ChatApi
 {
     public class UserContact
     {
-        [Key]
         public string? UserName { get; set; }
         public string? ContactOf { get; set; }
         public string? NickName { get; set; }

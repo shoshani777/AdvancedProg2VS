@@ -88,7 +88,7 @@ namespace ChatApi.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ContactOf")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
@@ -108,7 +108,7 @@ namespace ChatApi.Migrations
                     b.Property<int>("unreadMark")
                         .HasColumnType("int");
 
-                    b.HasKey("UserName");
+                    b.HasKey("UserName", "ContactOf");
 
                     b.ToTable("UserContact");
                 });
