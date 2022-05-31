@@ -16,5 +16,13 @@ namespace ChatApi.Data
         public DbSet<ChatApi.UserContact>? UserContact { get; set; }
 
         public DbSet<ChatApi.Message>? Message { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<UserContact>().HasKey(u => new
+            {
+                u.UserName,
+                u.ContactOf
+            });
+        }
     }
 }

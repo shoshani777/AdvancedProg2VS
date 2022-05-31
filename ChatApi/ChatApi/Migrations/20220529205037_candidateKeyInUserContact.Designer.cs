@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ChatApi.Migrations
 {
     [DbContext(typeof(ChatApiContext))]
-    [Migration("20220527152045_minorhanges")]
-    partial class minorhanges
+    [Migration("20220529205037_candidateKeyInUserContact")]
+    partial class candidateKeyInUserContact
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -90,7 +90,10 @@ namespace ChatApi.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ContactOf")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("NickName")
                         .HasColumnType("nvarchar(max)");
@@ -98,7 +101,16 @@ namespace ChatApi.Migrations
                     b.Property<string>("Server")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("UserName");
+                    b.Property<bool>("isClicked")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("unread")
+                        .HasColumnType("int");
+
+                    b.Property<int>("unreadMark")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserName", "ContactOf");
 
                     b.ToTable("UserContact");
                 });
