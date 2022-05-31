@@ -4,11 +4,13 @@
 
 #### Run the reviews site:
 1. pull the git files to a MVC project
-2. execute the program and open chrome
+2. update the data-base
+3. execute the program and open chrome
 
 #### Run the Rest-Api:
 1. pull the git files to a Web-Rest-Api project
-2. execute the program
+2. update the data-base
+3. execute the program
 
 #### Run client-side (ReactJS):
 1. Clone the files to a react project.
